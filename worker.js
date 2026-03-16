@@ -3,7 +3,6 @@ addEventListener('fetch', event => {
 })
 
 async function handleRequest(request) {
-  // CORS preflight
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -43,7 +42,7 @@ async function handleRequest(request) {
   const data = await response.json()
   
   return new Response(JSON.stringify(data), {
-    status: response.status,
+    status: response.ok ? 200 : 400,
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'

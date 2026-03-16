@@ -738,7 +738,7 @@
             msgEl.style.color = '#06b6d4';
             
             try {
-                const response = await fetch('/api/subscribe', {
+                const response = await fetch('https://ai-stories-subscribe.lisa155188.workers.dev/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email })
