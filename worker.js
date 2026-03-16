@@ -3,50 +3,85 @@ addEventListener('fetch', event => {
 })
 
 async function handleRequest(request) {
+  const url = new URL(request.url);
+  
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+  
   if (request.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      }
-    })
+    return new Response(null, { headers: corsHeaders });
   }
   
-  if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-  
-  const body = await request.json()
-  const email = body.email
-  
-  if (!email) {
-    return new Response(JSON.stringify({ error: 'Email required' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    })
-  }
-  
-  const response = await fetch('https://api.convertkit.com/v3/forms/9212986/subscribe', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      api_key: 'Q9hmmxTtco7Bw-hZOzNmrQ',
-      email: email,
-      tags: [17560155]
-    })
-  })
-  
-  const data = await response.json()
-  
-  return new Response(JSON.stringify(data), {
-    status: response.ok ? 200 : 400,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+  // 订阅接口
+  if (url.pathname === '/subscribe' && request.method === 'POST') {
+    const body = await request.json();
+    const email = body.email;
+    
+    if (!email || !email.includes('@')) {
+      return new Response(JSON.stringify({ error: '邮箱格式错误' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
     }
-  })
+    
+    // 获取现有订阅者列表
+    let subscribers = [];
+    const existing = await SUBSCRIBERS.get('list');
+    if (existing) {
+      subscribers = JSON.parse(existing);
+    }
+    
+    // 检查是否已订阅
+    if (subscribers.includes(email)) {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: '您已订阅过！' 
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
+    }
+    
+    // 添加新订阅者
+    subscribers.push({
+      email: email,
+      time: new Date().toISOString()
+    });
+    
+    // 保存到 KV
+    await SUBSCRIBERS.put('list', JSON.stringify(subscribers));
+    
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: '订阅成功！',
+      total: subscribers.length
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+  
+  // 查询订阅者列表（需要密码）
+  if (url.pathname === '/list' && request.method === 'GET') {
+    const secret = url.searchParams.get('secret');
+    if (secret !== '9527king') {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
+    }
+    
+    const subscribers = await SUBSCRIBERS.get('list');
+    return new Response(subscribers || '[]', {
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+  
+  return new Response(JSON.stringify({ error: 'Not found' }), {
+    status: 404,
+    headers: { 'Content-Type': 'application/json', ...corsHeaders }
+  });
 }

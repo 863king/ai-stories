@@ -1,3 +1,7 @@
 name = "ai-stories-subscribe"
 main = "worker.js"
 compatibility_date = "2026-03-16"
+
+[[kv_namespaces]]
+binding = "SUBSCRIBERS"
+id = "9fdfd98c144a4fb88b28801157705ecf"
