@@ -9,6 +9,7 @@ import json
 import os
 from datetime import datetime
 
+CONVERTKIT_API_KEY = "Q9hmmxTtco7Bw-hZOzNmrQ"
 CONVERTKIT_API_SECRET = "T5t2AncwxOTuFedvZ9mBRSqqL0PEAlTwo17MlGs3B-w"
 CONVERTKIT_API_URL = "https://api.convertkit.com/v3"
 POSTS_FILE = "/root/.openclaw/workspace/ai-stories/posts/posts.json"
