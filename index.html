@@ -746,7 +746,7 @@
                 
                 const data = await response.json();
                 
-                if (response.ok && data.success) {
+                if (response.ok && (data.success || data.subscription)) {
                     msgEl.textContent = '✅ 订阅成功！请查收确认邮件。';
                     msgEl.style.color = '#10b981';
                     document.getElementById('email-input').value = '';
