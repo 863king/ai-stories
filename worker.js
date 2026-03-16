@@ -30,12 +30,13 @@ async function handleRequest(request) {
     })
   }
   
-  const response = await fetch('https://api.convertkit.com/v3/tags/17560155/subscribe', {
+  const response = await fetch('https://api.convertkit.com/v3/forms/9212986/subscribe', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       api_key: 'Q9hmmxTtco7Bw-hZOzNmrQ',
-      email: email
+      email: email,
+      tags: [17560155]
     })
   })
   
