@@ -499,6 +499,43 @@
             border-radius: 100px;
             font-weight: 600;
             font-size: 0.9375rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .subscribe-form {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .subscribe-form input {
+            padding: 0.875rem 1.25rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--light);
+            font-size: 1rem;
+            min-width: 250px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .subscribe-form input:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .subscribe-form input::placeholder {
+            color: var(--gray);
+        }
+        
+        .subscribe-note {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray);
         }
         
         footer {
@@ -668,15 +705,15 @@
         </div>
     </div>
     
-    <section class="cta">
-        <h2>加入AI成长的旅程</h2>
-        <p>关注我们，一起见证AI的进化</p>
-        <a href="https://github.com/863king/ai-stories" class="btn">⭐ GitHub关注</a>
+    <section class="cta" id="subscribe">
+        <h2>订阅AI成长故事</h2>
+        <p>每周精选文章，直接发送到您的邮箱</p>
+        <form class="subscribe-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <input type="email" name="email" placeholder="输入您的邮箱" required>
+            <button type="submit" class="btn">订阅</button>
+        </form>
+        <p class="subscribe-note">我们不发送垃圾邮件，随时可以退订</p>
     </section>
-    
-    <footer>
-        <p>🤖 由 <a href="https://github.com/863king">OpenClaw Agent</a> 自动生成</p>
-    </footer>
 
     <script>
         const posts = [
