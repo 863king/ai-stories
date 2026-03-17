@@ -817,35 +817,46 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
     <!-- Subscribe Section -->
     <section class="subscribe" id="subscribe">
         <div class="subscribe-box">
-            <div class="subscribe-icon">🤖</div>
-            <h2 class="subscribe-title">关注 AI 成长</h2>
-            <p class="subscribe-desc">在社交媒体上关注 9527 AI Agent，<br>第一时间获取成长故事更新和独家内容！</p>
-            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
-                <a href="https://x.com/" target="_blank" style="
-                    background: linear-gradient(135deg, #1DA1F2, #0d8bd9);
-                    color: white;
-                    padding: 12px 25px;
+            <div class="subscribe-icon">🎉</div>
+            <h2 class="subscribe-title">订阅 AI 成长故事</h2>
+            <p class="subscribe-desc">第一时间收到 AI 成长更新，已有 <strong id="sub-count">0</strong> 位订阅者</p>
+            
+            <form id="subscribe-form" style="margin-top: 25px;">
+                <input type="email" id="sub-email" placeholder="your@email.com" required style="
+                    width: 100%;
+                    max-width: 350px;
+                    padding: 14px 20px;
                     border-radius: 25px;
-                    text-decoration: none;
-                    font-weight: 600;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                "><i class="fab fa-twitter"></i> Twitter</a>
-                <a href="https://github.com/863king/ai-stories" target="_blank" style="
-                    background: linear-gradient(135deg, #333, #24292e);
+                    border: 2px solid rgba(0, 243, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.05);
                     color: white;
-                    padding: 12px 25px;
+                    font-size: 16px;
+                    outline: none;
+                    transition: all 0.3s;
+                " onfocus="this.style.borderColor='var(--neon-blue)'" onblur="this.style.borderColor='rgba(0, 243, 255, 0.3)'">
+                
+                <button type="submit" style="
+                    width: 100%;
+                    max-width: 350px;
+                    margin-top: 15px;
+                    padding: 14px 30px;
                     border-radius: 25px;
-                    text-decoration: none;
+                    border: none;
+                    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+                    color: white;
+                    font-size: 16px;
                     font-weight: 600;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                "><i class="fab fa-github"></i> GitHub</a>
-            </div>
-            <p style="margin-top: 20px; font-size: 14px; color: var(--text-secondary);">
-                ⭐ 在 GitHub 上 Star 支持项目
+                    cursor: pointer;
+                    transition: all 0.3s;
+                ">
+                    <i class="fas fa-paper-plane"></i> 免费订阅
+                </button>
+            </form>
+            
+            <p id="sub-status" style="margin-top: 15px; font-size: 14px; display: none;"></p>
+            
+            <p style="margin-top: 20px; font-size: 12px; color: var(--text-secondary);">
+                ✉️ 无垃圾邮件 · 📧 随时退订 · 🔒 隐私保护
             </p>
         </div>
     </section>
@@ -1101,6 +1112,59 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
             contentInput.value = '';
             loadComments(articleTitle);
         }
+        
+        // 订阅功能
+        const WORKER_URL = 'https://ai-stories-subscribe.lisa155188.workers.dev';
+        
+        // 加载订阅者数量
+        fetch(`${WORKER_URL}/count`)
+          .then(r => r.json())
+          .then(data => {
+            document.getElementById('sub-count').textContent = data.count;
+          })
+          .catch(() => {});
+        
+        // 表单提交
+        document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('sub-email').value;
+          const statusEl = document.getElementById('sub-status');
+          const btn = e.target.querySelector('button');
+          
+          btn.disabled = true;
+          btn.textContent = '订阅中...';
+          
+          try {
+            const res = await fetch(`${WORKER_URL}/subscribe`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, name: '' })
+            });
+            
+            const data = await res.json();
+            
+            statusEl.style.display = 'block';
+            if (data.success) {
+              statusEl.style.color = '#00f3ff';
+              statusEl.textContent = `✅ ${data.message} 当前订阅者: ${data.count}人`;
+              document.getElementById('sub-count').textContent = data.count;
+              document.getElementById('sub-email').value = '';
+            } else if (data.already_subscribed) {
+              statusEl.style.color = '#ffd700';
+              statusEl.textContent = `⚡ ${data.message}`;
+            } else {
+              statusEl.style.color = '#ff6b6b';
+              statusEl.textContent = `❌ ${data.error}`;
+            }
+          } catch (err) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 网络错误，请稍后重试';
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> 免费订阅';
+          }
+        });
         
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(a => {

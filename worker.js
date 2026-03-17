@@ -1,100 +1,91 @@
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
+// AI成长故事订阅系统 - Cloudflare Worker
+// 订阅者存储在 KV: SUBSCRIBERS
 
-const TELEGRAM_BOT_TOKEN = "7895030104:AAHfXqJ3f2yZQkLQVp5mNtRqWxYzAbCdEf";
-const TELEGRAM_CHAT_ID = "2075850034";
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
 
-async function handleRequest(request) {
-  const url = new URL(request.url);
-  
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
-  };
-  
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-  
-  // 订阅接口
-  if (url.pathname === '/subscribe' && request.method === 'POST') {
-    const body = await request.json();
-    const email = body.email;
+async function handleSubscribe(request, env) {
+  try {
+    const { email, name } = await request.json();
     
     if (!email || !email.includes('@')) {
-      return new Response(JSON.stringify({ error: '邮箱格式错误' }), {
+      return new Response(JSON.stringify({ error: '请输入有效邮箱' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
       });
     }
     
-    try {
-      // 1. 保存到 KV
-      let subscribers = [];
-      const existing = await SUBSCRIBERS.get('list');
-      if (existing) {
-        subscribers = JSON.parse(existing);
-      }
-      
-      const alreadySubscribed = subscribers.some(s => s.email === email);
-      if (!alreadySubscribed) {
-        subscribers.push({
-          email: email,
-          time: new Date().toISOString()
-        });
-        await SUBSCRIBERS.put('list', JSON.stringify(subscribers));
-      }
-      
-      // 2. 发送 Telegram 通知
-      const msg = `📧 **新订阅者**\n\n邮箱: ${email}\n时间: ${new Date().toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}\n总计: ${subscribers.length} 人`;
-      
-      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: msg,
-          parse_mode: 'Markdown'
-        })
-      });
-      
+    // 检查是否已订阅
+    const existing = await env.SUBSCRIBERS.get(email);
+    if (existing) {
       return new Response(JSON.stringify({ 
-        success: true, 
-        message: '订阅成功！',
-        total: subscribers.length
+        message: '您已订阅过啦！',
+        already_subscribed: true 
       }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
-      });
-    } catch (e) {
-      console.error('Subscribe error:', e);
-      return new Response(JSON.stringify({ error: '订阅失败，请重试' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
-      });
-    }
-  }
-  
-  // 查询订阅者列表
-  if (url.pathname === '/list' && request.method === 'GET') {
-    const secret = url.searchParams.get('secret');
-    if (secret !== '9527king') {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
       });
     }
     
-    const subscribers = await SUBSCRIBERS.get('list');
-    return new Response(subscribers || '[]', {
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    // 保存订阅者
+    const subscriber = {
+      email,
+      name: name || '匿名',
+      subscribed_at: new Date().toISOString(),
+      verified: false,
+      token: crypto.randomUUID()
+    };
+    
+    await env.SUBSCRIBERS.put(email, JSON.stringify(subscriber));
+    
+    // 获取总数
+    const count = await env.SUBSCRIBERS.get('count') || '0';
+    const newCount = parseInt(count) + 1;
+    await env.SUBSCRIBERS.put('count', newCount.toString());
+    
+    return new Response(JSON.stringify({ 
+      success: true,
+      message: '订阅成功！感谢您的关注',
+      count: newCount
+    }), {
+      headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
+    });
+    
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
     });
   }
-  
-  return new Response(JSON.stringify({ error: 'Not found' }), {
-    status: 404,
-    headers: { 'Content-Type': 'application/json', ...corsHeaders }
+}
+
+async function handleCount(request, env) {
+  const count = await env.SUBSCRIBERS.get('count') || '0';
+  return new Response(JSON.stringify({ count: parseInt(count) }), {
+    headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
   });
 }
+
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { headers: CORS_HEADERS });
+    }
+    
+    if (url.pathname === '/subscribe' && request.method === 'POST') {
+      return handleSubscribe(request, env);
+    }
+    
+    if (url.pathname === '/count' && request.method === 'GET') {
+      return handleCount(request, env);
+    }
+    
+    return new Response('AI成长故事订阅系统', {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
+  }
+};
