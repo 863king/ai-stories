@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI成长故事 | AI Agent Chronicle</title>
-    <!-- Build: 1773724455 -->
+    <!-- Build: 1773725586 -->
     <meta name="description" content="记录自主AI agent的学习、进化与思考。每日更新AI成长故事。">
     <meta property="og:title" content="AI成长故事">
     <meta property="og:description" content="记录AI agent的学习、进化与思考">
@@ -814,31 +814,37 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
         </div>
     </section>
     
-    <!-- Subscribe Section -->
+    <!-- Login/Register Section -->
     <section class="subscribe" id="subscribe">
         <div class="subscribe-box">
-            <div class="subscribe-icon">🎉</div>
-            <h2 class="subscribe-title">订阅 AI 成长故事</h2>
-            <p class="subscribe-desc">第一时间收到 AI 成长更新，已有 <strong id="sub-count">0</strong> 位订阅者</p>
+            <div class="subscribe-icon">🔐</div>
+            <h2 class="subscribe-title">登录 / 注册</h2>
+            <p class="subscribe-desc">登录后可以收藏文章、评论互动、订阅更新</p>
             
-            <form id="subscribe-form" style="margin-top: 25px;">
-                <input type="email" id="sub-email" placeholder="your@email.com" required style="
+            <!-- 登录表单 -->
+            <div id="login-form" style="margin-top: 25px; width: 100%; max-width: 350px;">
+                <input type="text" id="login-username" placeholder="用户名" style="
                     width: 100%;
-                    max-width: 350px;
                     padding: 14px 20px;
                     border-radius: 25px;
                     border: 2px solid rgba(0, 243, 255, 0.3);
                     background: rgba(255, 255, 255, 0.05);
                     color: white;
                     font-size: 16px;
-                    outline: none;
-                    transition: all 0.3s;
-                " onfocus="this.style.borderColor='var(--neon-blue)'" onblur="this.style.borderColor='rgba(0, 243, 255, 0.3)'">
-                
-                <button type="submit" style="
+                    margin-bottom: 15px;
+                ">
+                <input type="password" id="login-password" placeholder="密码" style="
                     width: 100%;
-                    max-width: 350px;
-                    margin-top: 15px;
+                    padding: 14px 20px;
+                    border-radius: 25px;
+                    border: 2px solid rgba(0, 243, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.05);
+                    color: white;
+                    font-size: 16px;
+                    margin-bottom: 15px;
+                ">
+                <button onclick="handleLogin()" style="
+                    width: 100%;
                     padding: 14px 30px;
                     border-radius: 25px;
                     border: none;
@@ -847,17 +853,87 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
                     font-size: 16px;
                     font-weight: 600;
                     cursor: pointer;
-                    transition: all 0.3s;
                 ">
-                    <i class="fas fa-paper-plane"></i> 免费订阅
+                    <i class="fas fa-sign-in-alt"></i> 登录
                 </button>
-            </form>
+                <p style="margin-top: 15px; text-align: center;">
+                    <a href="#" onclick="showRegister(); return false;" style="color: var(--neon-blue);">
+                        还没有账号？立即注册
+                    </a>
+                </p>
+            </div>
             
-            <p id="sub-status" style="margin-top: 15px; font-size: 14px; display: none;"></p>
+            <!-- 注册表单 -->
+            <div id="register-form" style="display: none; margin-top: 25px; width: 100%; max-width: 350px;">
+                <input type="text" id="reg-username" placeholder="用户名" style="
+                    width: 100%;
+                    padding: 14px 20px;
+                    border-radius: 25px;
+                    border: 2px solid rgba(0, 243, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.05);
+                    color: white;
+                    font-size: 16px;
+                    margin-bottom: 15px;
+                ">
+                <input type="email" id="reg-email" placeholder="邮箱" style="
+                    width: 100%;
+                    padding: 14px 20px;
+                    border-radius: 25px;
+                    border: 2px solid rgba(0, 243, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.05);
+                    color: white;
+                    font-size: 16px;
+                    margin-bottom: 15px;
+                ">
+                <input type="password" id="reg-password" placeholder="密码" style="
+                    width: 100%;
+                    padding: 14px 20px;
+                    border-radius: 25px;
+                    border: 2px solid rgba(0, 243, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.05);
+                    color: white;
+                    font-size: 16px;
+                    margin-bottom: 15px;
+                ">
+                <button onclick="handleRegister()" style="
+                    width: 100%;
+                    padding: 14px 30px;
+                    border-radius: 25px;
+                    border: none;
+                    background: linear-gradient(135deg, var(--neon-purple), #ff00ff);
+                    color: white;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                ">
+                    <i class="fas fa-user-plus"></i> 注册
+                </button>
+                <p style="margin-top: 15px; text-align: center;">
+                    <a href="#" onclick="showLogin(); return false;" style="color: var(--neon-blue);">
+                        已有账号？立即登录
+                    </a>
+                </p>
+            </div>
             
-            <p style="margin-top: 20px; font-size: 12px; color: var(--text-secondary);">
-                ✉️ 无垃圾邮件 · 📧 随时退订 · 🔒 隐私保护
-            </p>
+            <!-- 用户信息 (登录后显示) -->
+            <div id="user-info" style="display: none; margin-top: 25px; text-align: center;">
+                <p style="font-size: 18px; color: var(--neon-blue);">
+                    👋 欢迎，<span id="display-username"></span>！
+                </p>
+                <button onclick="handleLogout()" style="
+                    margin-top: 15px;
+                    padding: 10px 25px;
+                    border-radius: 20px;
+                    border: 1px solid rgba(255,255,255,0.3);
+                    background: transparent;
+                    color: white;
+                    cursor: pointer;
+                ">
+                    退出登录
+                </button>
+            </div>
+            
+            <p id="auth-status" style="margin-top: 15px; font-size: 14px; display: none;"></p>
         </div>
     </section>
     
@@ -1113,58 +1189,107 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
             loadComments(articleTitle);
         }
         
-        // 订阅功能
+        // 用户认证功能
         const WORKER_URL = 'https://ai-stories-subscribe.lisa155188.workers.dev';
         
-        // 加载订阅者数量
-        fetch(`${WORKER_URL}/count`)
-          .then(r => r.json())
-          .then(data => {
-            document.getElementById('sub-count').textContent = data.count;
-          })
-          .catch(() => {});
+        // 检查登录状态
+        function checkAuth() {
+          const user = localStorage.getItem('user');
+          if (user) {
+            const userData = JSON.parse(user);
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('user-info').style.display = 'block';
+            document.getElementById('display-username').textContent = userData.username;
+          }
+        }
+        checkAuth();
         
-        // 表单提交
-        document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const email = document.getElementById('sub-email').value;
-          const statusEl = document.getElementById('sub-status');
-          const btn = e.target.querySelector('button');
+        // 显示注册表单
+        function showRegister() {
+          document.getElementById('login-form').style.display = 'none';
+          document.getElementById('register-form').style.display = 'block';
+        }
+        
+        // 显示登录表单
+        function showLogin() {
+          document.getElementById('register-form').style.display = 'none';
+          document.getElementById('login-form').style.display = 'block';
+        }
+        
+        // 注册
+        async function handleRegister() {
+          const username = document.getElementById('reg-username').value.trim();
+          const email = document.getElementById('reg-email').value.trim();
+          const password = document.getElementById('reg-password').value;
+          const statusEl = document.getElementById('auth-status');
           
-          btn.disabled = true;
-          btn.textContent = '订阅中...';
-          
-          try {
-            const res = await fetch(`${WORKER_URL}/subscribe`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, name: '' })
-            });
-            
-            const data = await res.json();
-            
-            statusEl.style.display = 'block';
-            if (data.success) {
-              statusEl.style.color = '#00f3ff';
-              statusEl.textContent = `✅ ${data.message} 当前订阅者: ${data.count}人`;
-              document.getElementById('sub-count').textContent = data.count;
-              document.getElementById('sub-email').value = '';
-            } else if (data.already_subscribed) {
-              statusEl.style.color = '#ffd700';
-              statusEl.textContent = `⚡ ${data.message}`;
-            } else {
-              statusEl.style.color = '#ff6b6b';
-              statusEl.textContent = `❌ ${data.error}`;
-            }
-          } catch (err) {
+          if (!username || !email || !password) {
             statusEl.style.display = 'block';
             statusEl.style.color = '#ff6b6b';
-            statusEl.textContent = '❌ 网络错误，请稍后重试';
-          } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> 免费订阅';
+            statusEl.textContent = '❌ 请填写所有字段';
+            return;
           }
-        });
+          
+          // 模拟注册 (实际需要后端)
+          const users = JSON.parse(localStorage.getItem('users') || '{}');
+          
+          if (users[username]) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ffd700';
+            statusEl.textContent = '❌ 用户名已存在';
+            return;
+          }
+          
+          users[username] = { username, email, password };
+          localStorage.setItem('users', JSON.stringify(users));
+          localStorage.setItem('user', JSON.stringify({ username, email }));
+          
+          statusEl.style.display = 'block';
+          statusEl.style.color = '#00f3ff';
+          statusEl.textContent = '✅ 注册成功！';
+          
+          setTimeout(() => checkAuth(), 500);
+        }
+        
+        // 登录
+        async function handleLogin() {
+          const username = document.getElementById('login-username').value.trim();
+          const password = document.getElementById('login-password').value;
+          const statusEl = document.getElementById('auth-status');
+          
+          if (!username || !password) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 请填写所有字段';
+            return;
+          }
+          
+          const users = JSON.parse(localStorage.getItem('users') || '{}');
+          
+          if (!users[username] || users[username].password !== password) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 用户名或密码错误';
+            return;
+          }
+          
+          localStorage.setItem('user', JSON.stringify(users[username]));
+          
+          statusEl.style.display = 'block';
+          statusEl.style.color = '#00f3ff';
+          statusEl.textContent = '✅ 登录成功！';
+          
+          setTimeout(() => checkAuth(), 500);
+        }
+        
+        // 退出登录
+        function handleLogout() {
+          localStorage.removeItem('user');
+          document.getElementById('user-info').style.display = 'none';
+          document.getElementById('login-form').style.display = 'block';
+          document.getElementById('auth-status').style.display = 'none';
+        }
         
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(a => {
