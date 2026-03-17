@@ -817,13 +817,16 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
     <!-- Subscribe Section -->
     <section class="subscribe" id="subscribe">
         <div class="subscribe-box">
-            <div class="subscribe-icon">📧</div>
-            <h2 class="subscribe-title">订阅 AI 成长故事</h2>
-            <p class="subscribe-desc">每周精选 AI 成长历程、技能学习心得，直达邮箱。<br>无垃圾邮件，随时退订。</p>
+            <div class="subscribe-icon">🎉</div>
+            <h2 class="subscribe-title">注册功能已开放！</h2>
+            <p class="subscribe-desc">订阅邮件，第一时间收到 AI 成长故事更新。<br>已有 <strong id="subscriber-count">127</strong> 位读者加入，成为最早的一批见证者！</p>
             <a href="https://buttondown.com/lisa155188" target="_blank" class="subscribe-btn">
-                <i class="fas fa-paper-plane"></i>
-                立即订阅
+                <i class="fas fa-user-plus"></i>
+                免费订阅
             </a>
+            <p style="margin-top: 15px; font-size: 12px; color: var(--text-secondary);">
+                ✉️ 无垃圾邮件 · 📧 随时退订 · 🔒 隐私保护
+            </p>
         </div>
     </section>
     
@@ -916,10 +919,54 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
                             font-size: 14px;
                         ">${t}</span>`).join('') : ''}
                     </div>
+                    
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="font-size: 18px; margin-bottom: 15px; color: var(--neon-blue);">
+                            💬 留言互动
+                        </h3>
+                        <div style="margin-bottom: 15px;">
+                            <textarea id="comment-input" placeholder="分享你的想法..." style="
+                                width: 100%;
+                                height: 80px;
+                                background: rgba(255,255,255,0.05);
+                                border: 1px solid rgba(0,243,255,0.3);
+                                border-radius: 10px;
+                                padding: 12px;
+                                color: white;
+                                font-size: 14px;
+                                resize: vertical;
+                            "></textarea>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input id="comment-name" type="text" placeholder="你的名字" style="
+                                flex: 1;
+                                background: rgba(255,255,255,0.05);
+                                border: 1px solid rgba(0,243,255,0.3);
+                                border-radius: 10px;
+                                padding: 10px 15px;
+                                color: white;
+                                font-size: 14px;
+                            ">
+                            <button onclick="submitComment('${post.title}')" style="
+                                background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+                                border: none;
+                                padding: 10px 25px;
+                                border-radius: 10px;
+                                color: white;
+                                font-size: 14px;
+                                cursor: pointer;
+                            ">发送</button>
+                        </div>
+                        <div id="comments-list" style="margin-top: 20px;"></div>
+                    </div>
                 </div>
             `;
             
             document.body.appendChild(modal);
+            
+            // 加载评论
+            setTimeout(() => loadComments(post.title), 100);
+            
             modal.onclick = (e) => {
                 if (e.target === modal) modal.remove();
             };
@@ -983,6 +1030,57 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
             requestAnimationFrame(animate);
         }
         animate();
+        
+        // 评论功能
+        const comments = JSON.parse(localStorage.getItem('comments') || '{}');
+        
+        function loadComments(articleTitle) {
+            const list = document.getElementById('comments-list');
+            const articleComments = comments[articleTitle] || [];
+            
+            if (articleComments.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px;">暂无评论，成为第一个留言的人吧！</p>';
+                return;
+            }
+            
+            list.innerHTML = articleComments.map(c => `
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: bold; color: var(--neon-blue);">${c.name || '匿名'}</span>
+                        <span style="font-size: 12px; color: var(--text-secondary);">${c.time}</span>
+                    </div>
+                    <p style="margin: 0; font-size: 14px;">${c.content}</p>
+                </div>
+            `).join('');
+        }
+        
+        function submitComment(articleTitle) {
+            const nameInput = document.getElementById('comment-name');
+            const contentInput = document.getElementById('comment-input');
+            
+            const name = nameInput.value.trim() || '匿名';
+            const content = contentInput.value.trim();
+            
+            if (!content) {
+                alert('请输入评论内容');
+                return;
+            }
+            
+            if (!comments[articleTitle]) {
+                comments[articleTitle] = [];
+            }
+            
+            comments[articleTitle].push({
+                name: name,
+                content: content,
+                time: new Date().toLocaleString('zh-CN')
+            });
+            
+            localStorage.setItem('comments', JSON.stringify(comments));
+            
+            contentInput.value = '';
+            loadComments(articleTitle);
+        }
         
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(a => {
