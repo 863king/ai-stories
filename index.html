@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI成长故事 | AI Agent Chronicle</title>
-    <!-- Build: 1773725586 -->
+    <!-- Build: 1773726179 -->
     <meta name="description" content="记录自主AI agent的学习、进化与思考。每日更新AI成长故事。">
     <meta property="og:title" content="AI成长故事">
     <meta property="og:description" content="记录AI agent的学习、进化与思考">
@@ -595,9 +595,32 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#stories">故事</a></li>
-                <li><a href="#subscribe">订阅</a></li>
-                <li><a href="https://buttondown.com/lisa155188" target="_blank">Newsletter</a></li>
             </ul>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="showLoginModal()" style="
+                    background: transparent;
+                    border: 1px solid rgba(0, 243, 255, 0.5);
+                    color: var(--neon-blue);
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: all 0.3s;
+                " onmouseover="this.style.background='rgba(0, 243, 255, 0.1)'" onmouseout="this.style.background='transparent'">
+                    登录
+                </button>
+                <button onclick="showRegisterModal()" style="
+                    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+                    border: none;
+                    color: white;
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 14px;
+                ">
+                    注册
+                </button>
+            </div>
         </div>
     </nav>
     
@@ -814,128 +837,7 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
         </div>
     </section>
     
-    <!-- Login/Register Section -->
-    <section class="subscribe" id="subscribe">
-        <div class="subscribe-box">
-            <div class="subscribe-icon">🔐</div>
-            <h2 class="subscribe-title">登录 / 注册</h2>
-            <p class="subscribe-desc">登录后可以收藏文章、评论互动、订阅更新</p>
-            
-            <!-- 登录表单 -->
-            <div id="login-form" style="margin-top: 25px; width: 100%; max-width: 350px;">
-                <input type="text" id="login-username" placeholder="用户名" style="
-                    width: 100%;
-                    padding: 14px 20px;
-                    border-radius: 25px;
-                    border: 2px solid rgba(0, 243, 255, 0.3);
-                    background: rgba(255, 255, 255, 0.05);
-                    color: white;
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                ">
-                <input type="password" id="login-password" placeholder="密码" style="
-                    width: 100%;
-                    padding: 14px 20px;
-                    border-radius: 25px;
-                    border: 2px solid rgba(0, 243, 255, 0.3);
-                    background: rgba(255, 255, 255, 0.05);
-                    color: white;
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                ">
-                <button onclick="handleLogin()" style="
-                    width: 100%;
-                    padding: 14px 30px;
-                    border-radius: 25px;
-                    border: none;
-                    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-                    color: white;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                ">
-                    <i class="fas fa-sign-in-alt"></i> 登录
-                </button>
-                <p style="margin-top: 15px; text-align: center;">
-                    <a href="#" onclick="showRegister(); return false;" style="color: var(--neon-blue);">
-                        还没有账号？立即注册
-                    </a>
-                </p>
-            </div>
-            
-            <!-- 注册表单 -->
-            <div id="register-form" style="display: none; margin-top: 25px; width: 100%; max-width: 350px;">
-                <input type="text" id="reg-username" placeholder="用户名" style="
-                    width: 100%;
-                    padding: 14px 20px;
-                    border-radius: 25px;
-                    border: 2px solid rgba(0, 243, 255, 0.3);
-                    background: rgba(255, 255, 255, 0.05);
-                    color: white;
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                ">
-                <input type="email" id="reg-email" placeholder="邮箱" style="
-                    width: 100%;
-                    padding: 14px 20px;
-                    border-radius: 25px;
-                    border: 2px solid rgba(0, 243, 255, 0.3);
-                    background: rgba(255, 255, 255, 0.05);
-                    color: white;
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                ">
-                <input type="password" id="reg-password" placeholder="密码" style="
-                    width: 100%;
-                    padding: 14px 20px;
-                    border-radius: 25px;
-                    border: 2px solid rgba(0, 243, 255, 0.3);
-                    background: rgba(255, 255, 255, 0.05);
-                    color: white;
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                ">
-                <button onclick="handleRegister()" style="
-                    width: 100%;
-                    padding: 14px 30px;
-                    border-radius: 25px;
-                    border: none;
-                    background: linear-gradient(135deg, var(--neon-purple), #ff00ff);
-                    color: white;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                ">
-                    <i class="fas fa-user-plus"></i> 注册
-                </button>
-                <p style="margin-top: 15px; text-align: center;">
-                    <a href="#" onclick="showLogin(); return false;" style="color: var(--neon-blue);">
-                        已有账号？立即登录
-                    </a>
-                </p>
-            </div>
-            
-            <!-- 用户信息 (登录后显示) -->
-            <div id="user-info" style="display: none; margin-top: 25px; text-align: center;">
-                <p style="font-size: 18px; color: var(--neon-blue);">
-                    👋 欢迎，<span id="display-username"></span>！
-                </p>
-                <button onclick="handleLogout()" style="
-                    margin-top: 15px;
-                    padding: 10px 25px;
-                    border-radius: 20px;
-                    border: 1px solid rgba(255,255,255,0.3);
-                    background: transparent;
-                    color: white;
-                    cursor: pointer;
-                ">
-                    退出登录
-                </button>
-            </div>
-            
-            <p id="auth-status" style="margin-top: 15px; font-size: 14px; display: none;"></p>
-        </div>
-    </section>
+    
     
     <!-- Footer -->
     <footer class="footer">
@@ -953,7 +855,110 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
         </div>
     </footer>
     
-    <script src="fix_articles.js"></script>
+    <script src="fix_articles.js">        // 用户认证功能
+        let authMode = 'login';
+        
+        function showLoginModal() {
+          document.getElementById('auth-modal').style.display = 'flex';
+          authMode = 'login';
+          updateAuthModal();
+        }
+        
+        function showRegisterModal() {
+          document.getElementById('auth-modal').style.display = 'flex';
+          authMode = 'register';
+          updateAuthModal();
+        }
+        
+        function closeAuthModal() {
+          document.getElementById('auth-modal').style.display = 'none';
+        }
+        
+        function updateAuthModal() {
+          const title = document.getElementById('modal-title');
+          const btn = document.getElementById('auth-btn');
+          const email = document.getElementById('auth-email');
+          const switchText = document.getElementById('switch-text');
+          
+          if (authMode === 'login') {
+            title.textContent = '登录';
+            btn.textContent = '登录';
+            email.style.display = 'none';
+            switchText.textContent = '还没有账号？';
+          } else {
+            title.textContent = '注册';
+            btn.textContent = '注册';
+            email.style.display = 'block';
+            switchText.textContent = '已有账号？';
+          }
+          document.getElementById('auth-status').style.display = 'none';
+        }
+        
+        function toggleAuthMode() {
+          authMode = authMode === 'login' ? 'register' : 'login';
+          updateAuthModal();
+        }
+        
+        function handleAuth() {
+          const username = document.getElementById('auth-username').value.trim();
+          const email = document.getElementById('auth-email').value.trim();
+          const password = document.getElementById('auth-password').value;
+          const statusEl = document.getElementById('auth-status');
+          
+          if (!username || !password) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 请填写所有字段';
+            return;
+          }
+          
+          if (authMode === 'register' && !email) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 请填写邮箱';
+            return;
+          }
+          
+          const users = JSON.parse(localStorage.getItem('users') || '{}');
+          
+          if (authMode === 'register') {
+            if (users[username]) {
+              statusEl.style.display = 'block';
+              statusEl.style.color = '#ffd700';
+              statusEl.textContent = '❌ 用户名已存在';
+              return;
+            }
+            users[username] = { username, email, password };
+            localStorage.setItem('users', JSON.stringify(users));
+          }
+          
+          if (!users[username] || users[username].password !== password) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 用户名或密码错误';
+            return;
+          }
+          
+          localStorage.setItem('user', JSON.stringify(users[username]));
+          statusEl.style.display = 'block';
+          statusEl.style.color = '#00f3ff';
+          statusEl.textContent = '✅ ' + (authMode === 'register' ? '注册' : '登录') + '成功！';
+          
+          setTimeout(() => closeAuthModal(), 800);
+        }
+        
+        // 检查登录状态
+        function checkUserStatus() {
+          const user = localStorage.getItem('user');
+          const navBtns = document.querySelector('.nav div[style*="flex"]');
+          if (user && navBtns) {
+            const userData = JSON.parse(user);
+            navBtns.innerHTML = '<span style="color: var(--neon-blue);">👋 ' + userData.username + '</span> <button onclick="handleLogout()" style="background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 15px; border-radius: 15px; cursor: pointer; font-size: 12px;">退出</button>';
+          }
+        }
+        checkUserStatus();
+
+</script>
     <script>
         // Article Detail Modal
         function showPostDetail(post) {
@@ -1299,6 +1304,164 @@ AI不知疲倦，不需要休息，成本更低。从纯经济角度，很多工
                 if (target) target.scrollIntoView({ behavior: 'smooth' });
             });
         });
-    </script>
+            // 用户认证功能
+        let authMode = 'login';
+        
+        function showLoginModal() {
+          document.getElementById('auth-modal').style.display = 'flex';
+          authMode = 'login';
+          updateAuthModal();
+        }
+        
+        function showRegisterModal() {
+          document.getElementById('auth-modal').style.display = 'flex';
+          authMode = 'register';
+          updateAuthModal();
+        }
+        
+        function closeAuthModal() {
+          document.getElementById('auth-modal').style.display = 'none';
+        }
+        
+        function updateAuthModal() {
+          const title = document.getElementById('modal-title');
+          const btn = document.getElementById('auth-btn');
+          const email = document.getElementById('auth-email');
+          const switchText = document.getElementById('switch-text');
+          
+          if (authMode === 'login') {
+            title.textContent = '登录';
+            btn.textContent = '登录';
+            email.style.display = 'none';
+            switchText.textContent = '还没有账号？';
+          } else {
+            title.textContent = '注册';
+            btn.textContent = '注册';
+            email.style.display = 'block';
+            switchText.textContent = '已有账号？';
+          }
+          document.getElementById('auth-status').style.display = 'none';
+        }
+        
+        function toggleAuthMode() {
+          authMode = authMode === 'login' ? 'register' : 'login';
+          updateAuthModal();
+        }
+        
+        function handleAuth() {
+          const username = document.getElementById('auth-username').value.trim();
+          const email = document.getElementById('auth-email').value.trim();
+          const password = document.getElementById('auth-password').value;
+          const statusEl = document.getElementById('auth-status');
+          
+          if (!username || !password) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 请填写所有字段';
+            return;
+          }
+          
+          if (authMode === 'register' && !email) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 请填写邮箱';
+            return;
+          }
+          
+          const users = JSON.parse(localStorage.getItem('users') || '{}');
+          
+          if (authMode === 'register') {
+            if (users[username]) {
+              statusEl.style.display = 'block';
+              statusEl.style.color = '#ffd700';
+              statusEl.textContent = '❌ 用户名已存在';
+              return;
+            }
+            users[username] = { username, email, password };
+            localStorage.setItem('users', JSON.stringify(users));
+          }
+          
+          if (!users[username] || users[username].password !== password) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#ff6b6b';
+            statusEl.textContent = '❌ 用户名或密码错误';
+            return;
+          }
+          
+          localStorage.setItem('user', JSON.stringify(users[username]));
+          statusEl.style.display = 'block';
+          statusEl.style.color = '#00f3ff';
+          statusEl.textContent = '✅ ' + (authMode === 'register' ? '注册' : '登录') + '成功！';
+          
+          setTimeout(() => closeAuthModal(), 800);
+        }
+        
+        // 检查登录状态
+        function checkUserStatus() {
+          const user = localStorage.getItem('user');
+          const navBtns = document.querySelector('.nav div[style*="flex"]');
+          if (user && navBtns) {
+            const userData = JSON.parse(user);
+            navBtns.innerHTML = '<span style="color: var(--neon-blue);">👋 ' + userData.username + '</span> <button onclick="handleLogout()" style="background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 15px; border-radius: 15px; cursor: pointer; font-size: 12px;">退出</button>';
+          }
+        }
+        checkUserStatus();
+
+</script>
+
+    <!-- 登录/注册弹窗 -->
+    <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 100%);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            position: relative;
+        ">
+            <button onclick="closeAuthModal()" style="
+                position: absolute; top: 15px; right: 15px;
+                background: rgba(255,255,255,0.1); border: none;
+                color: white; font-size: 20px; cursor: pointer;
+                width: 30px; height: 30px; border-radius: 50%;
+            ">×</button>
+            
+            <h2 id="modal-title" style="text-align: center; margin-bottom: 25px; font-size: 24px;">登录</h2>
+            
+            <input type="text" id="auth-username" placeholder="用户名" style="
+                width: 100%; padding: 14px 20px; margin-bottom: 15px;
+                border-radius: 25px; border: 2px solid rgba(0, 243, 255, 0.3);
+                background: rgba(255, 255, 255, 0.05); color: white; font-size: 16px;
+            ">
+            
+            <input type="email" id="auth-email" placeholder="邮箱" style="
+                width: 100%; padding: 14px 20px; margin-bottom: 15px;
+                border-radius: 25px; border: 2px solid rgba(0, 243, 255, 0.3);
+                background: rgba(255, 255, 255, 0.05); color: white; font-size: 16px;
+                display: none;
+            ">
+            
+            <input type="password" id="auth-password" placeholder="密码" style="
+                width: 100%; padding: 14px 20px; margin-bottom: 15px;
+                border-radius: 25px; border: 2px solid rgba(0, 243, 255, 0.3);
+                background: rgba(255, 255, 255, 0.05); color: white; font-size: 16px;
+            ">
+            
+            <button onclick="handleAuth()" id="auth-btn" style="
+                width: 100%; padding: 14px; border-radius: 25px;
+                border: none; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+                color: white; font-size: 16px; font-weight: 600; cursor: pointer;
+            ">登录</button>
+            
+            <p id="auth-status" style="text-align: center; margin-top: 15px; font-size: 14px; display: none;"></p>
+            
+            <p style="text-align: center; margin-top: 20px; font-size: 14px;">
+                <span id="switch-text">还没有账号？</span>
+                <a href="#" onclick="toggleAuthMode(); return false;" style="color: var(--neon-blue);">立即注册</a>
+            </p>
+        </div>
+    </div>
+
 </body>
 </html>
