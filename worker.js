@@ -2,7 +2,8 @@ addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request))
 })
 
-const BUTTONDOWN_API_KEY = "c8b9ac08-5a50-43c0-a1d8-61986ca05710";
+const TELEGRAM_BOT_TOKEN = "7895030104:AAHfXqJ3f2yZQkLQVp5mNtRqWxYzAbCdEf";
+const TELEGRAM_CHAT_ID = "2075850034";
 
 async function handleRequest(request) {
   const url = new URL(request.url);
@@ -29,7 +30,6 @@ async function handleRequest(request) {
       });
     }
     
-    // 同时订阅到 KV 和 Buttondown
     try {
       // 1. 保存到 KV
       let subscribers = [];
@@ -47,43 +47,27 @@ async function handleRequest(request) {
         await SUBSCRIBERS.put('list', JSON.stringify(subscribers));
       }
       
-      // 2. 订阅到 Buttondown（会发送确认邮件）
-      const bdResponse = await fetch('https://api.buttondown.email/v1/subscribers', {
+      // 2. 发送 Telegram 通知
+      const msg = `📧 **新订阅者**\n\n邮箱: ${email}\n时间: ${new Date().toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}\n总计: ${subscribers.length} 人`;
+      
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Token ${BUTTONDOWN_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email_address: email,
-          notes: 'Subscribed from AI Stories website',
-          referrer_url: 'https://ai2091.com'
+          chat_id: TELEGRAM_CHAT_ID,
+          text: msg,
+          parse_mode: 'Markdown'
         })
       });
       
-      const bdData = await bdResponse.json();
-      
-      if (bdResponse.ok || bdData.code === 'subscriber_already_subscribed') {
-        return new Response(JSON.stringify({ 
-          success: true, 
-          message: '订阅成功！确认邮件已发送到您的邮箱',
-          total: subscribers.length
-        }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        });
-      } else {
-        console.error('Buttondown error:', bdData);
-        // 即使 Buttondown 失败，本地 KV 保存成功也算订阅成功
-        return new Response(JSON.stringify({ 
-          success: true, 
-          message: '订阅成功！',
-          total: subscribers.length
-        }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        });
-      }
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: '订阅成功！',
+        total: subscribers.length
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
     } catch (e) {
       console.error('Subscribe error:', e);
       return new Response(JSON.stringify({ error: '订阅失败，请重试' }), {
